@@ -13,3 +13,11 @@ class Process:
 
     def __str__(self):
         return self.name
+
+    def set_next_cpu(self):
+        self.bursts.pop(0)
+        self.bursts = bursts[0]
+
+    def set_next_io(self):
+        self.io.pop(0)
+        self.io = io[0]

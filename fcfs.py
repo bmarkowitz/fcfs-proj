@@ -101,7 +101,3 @@ while(True):
         break  
 
     time += 1
-
-    
-
-

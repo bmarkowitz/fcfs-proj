@@ -12,14 +12,36 @@ def cpu_burst_is_complete(proc):
     else: return False
 
 def io_burst_is_complete(proc):
-    if proc.current_io == 1: return True
+    if proc.current_io == 0: return True
     else: return False
 
 def display_ready_queue():
-    print("[ Time: " + str(time))
-    for proc in executing_queue:
-        print(str(proc) + " - " + str(proc.arrival_time) + " - BURSTS: " + str(proc.bursts))
-    print("]")
+    print("Process          CPU Burst")
+    if ready_queue:
+        for proc in ready_queue:
+            print(str(proc) + "          " + str(proc.current_burst))
+    else:
+        print("[Empty]")
+
+def display_io_queue():
+    print("Process          Remaining I/O Time")
+    if io_queue:
+        for proc in io_queue:
+            print(str(proc) + "         " + str(proc.current_io))
+    else:
+        print("[Empty]")
+
+def display():
+    print("Current time: " + str(time))
+    try:
+        print("Now Running: " + str(executing_queue[0]))
+    except IndexError:
+        print("Now Running: IDLE")
+    print("--------------------------------------------")
+    display_ready_queue()
+    display_io_queue()
+    print()
+    print()
 
 def get_next_process():
     try:
@@ -36,7 +58,7 @@ def get_next_process():
             proc_to_exec = ready_queue.pop(ready_queue.index(earliest_arrival)) # Remove from ready queue
             executing_queue.insert(0, proc_to_exec) # Add to executing queue
             
-            print("Now Running: " + str(proc_to_exec) + " at " + str(time))
+            display()
         
     except IndexError:
         pass
@@ -60,34 +82,44 @@ ready_queue.insert(0, p8)
 
 
 while(True):
+
+    if ready_queue and not executing_queue:
+        get_next_process()
+
     if (io_queue):
+        removed = []
         for io_queue_process in io_queue:
             if io_burst_is_complete(io_queue_process): # Check if io is complete
-                proc = io_queue.pop(io_queue.index(io_queue_process)) # Remove from io queue
-                proc.set_next_io()  # Try to set next io burst
+                removed.append(io_queue_process) # Add to "to be removed" array
+                io_queue_process.set_next_io()  # Try to set next io burst
                 ready_queue.insert(0, io_queue_process) # Insert into ready queue            
                 continue
             else:
                 use_io_burst(io_queue_process) # If not complete, use an io time unit
 
-    if ready_queue and not executing_queue:
-        get_next_process()
-        
+        if removed:
+            for proc in removed:
+                del io_queue[io_queue.index(proc)]
+
     if executing_queue:
         proc = executing_queue[0] # Get process on CPU
         if (cpu_burst_is_complete(proc)): # If burst is complete
             try_set = proc.set_next_cpu()
+            
             if not try_set:
                 proc = executing_queue.pop() # Remove from CPU
                 proc.ta_time = time
-                #print(str(proc) + " -> COMPLETE -> at " + str(proc.ta_time)) # Mark as complete
                 complete_queue.append(proc)
+                get_next_process()
+            
             else:
                 proc.set_arrival_time(time) # Set time to arrive in ready queue from io
                 proc = executing_queue.pop() # Remove from CPU
                 io_queue.insert(0, proc) # Insert into io
-                use_io_burst(proc) # Immediately use an io time unit
-            get_next_process()
+                
+                get_next_process()
+                # use_io_burst(proc) # Immediately use an io time unit
+                
             continue
         else:
             use_cpu_burst(proc)
@@ -95,7 +127,7 @@ while(True):
 
     if not executing_queue and not cpu_idle:
         cpu_idle = True
-        print("Now Running: Idle at " + str(time))
+        display()
 
     if len(complete_queue) == 8:
         break  

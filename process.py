@@ -13,7 +13,7 @@ class Process:
         self.arrival_time = 0
 
     def __str__(self):
-        return "p" + str(self.name)
+        return "P" + str(self.name)
 
     def set_next_cpu(self):
         try:

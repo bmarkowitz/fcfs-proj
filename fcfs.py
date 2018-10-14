@@ -33,6 +33,8 @@ while(True):
     if scheduler.ready_queue and not scheduler.cpu:
         next_proc = scheduler.get_next_process()
         scheduler.load_cpu(next_proc)
+        if next_proc.resp_time == -1:
+            next_proc.resp_time = scheduler.time
         scheduler.display()
 
     if scheduler.cpu:
@@ -46,8 +48,11 @@ while(True):
                if next_proc:
                    scheduler.clear_cpu
                    scheduler.load_cpu(next_proc)
+                   if next_proc.resp_time == -1:
+                        next_proc.resp_time = scheduler.time
 
             else:
+                scheduler.completed.append(current_proc)
                 scheduler.clear_cpu()
                 if next_proc:
                     scheduler.load_cpu(next_proc)
@@ -67,4 +72,8 @@ while(True):
         scheduler.display()
         scheduler.context_switch = False
 
+    scheduler.advance_wait_time()
     scheduler.advance_time()
+
+for proc in scheduler.completed:
+    print(str(proc) + " - " + str(proc.wait_time))

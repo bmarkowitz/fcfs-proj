@@ -7,8 +7,9 @@ class Process:
         self.name = name
         self.current_burst = bursts[0]
         self.current_io = io[0]
-        self.resp_time = 0
+        self.resp_time = -1
         self.wait_time = 0
+        self.complete_time = False
         self.ta_time = 0
         self.arrival_time = 0
 

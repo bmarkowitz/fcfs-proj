@@ -7,6 +7,7 @@ class Scheduler:
         self.cpu = []
         self.io = []
         self.context_switch = False
+        self.completed = []
 
     def get_next_process(self):
         if self.ready_queue:
@@ -64,8 +65,16 @@ class Scheduler:
 
     def advance_time(self):
         self.time = self.time + 1
+
+    def advance_wait_time(self):
+        for proc in self.ready_queue:
+            proc.wait_time += 1
     
+
     def clear_cpu(self):
         self.cpu = []
+
+    # def complete_process(self, proc):
+
 
     

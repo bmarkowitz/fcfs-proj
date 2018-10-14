@@ -52,6 +52,7 @@ while(True):
                         next_proc.resp_time = scheduler.time
 
             else:
+                current_proc.ta_time = scheduler.time
                 scheduler.completed.append(current_proc)
                 scheduler.clear_cpu()
                 if next_proc:
@@ -75,5 +76,6 @@ while(True):
     scheduler.advance_wait_time()
     scheduler.advance_time()
 
+print("Process     RT         WT           TT")
 for proc in scheduler.completed:
-    print(str(proc) + " - " + str(proc.wait_time))
+    print(str(proc) + "     -    " + str(proc.resp_time) + "     -    " + str(proc.wait_time)+ "     -    " + str(proc.ta_time))

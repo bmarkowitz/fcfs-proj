@@ -32,3 +32,17 @@ class Process:
 
     def set_arrival_time(self, current_time):
         self.arrival_time = current_time + self.current_io
+
+    def cpu_burst_is_complete(self):
+        if self.current_burst == 0: return True
+        else: return False
+
+    def io_burst_is_complete(self):
+        if self.current_io == 1: return True
+        else: return False
+
+    def use_cpu_burst(self):
+        self.current_burst -= 1 # Decrement
+
+    def use_io_burst(self):
+        self.current_io -= 1 # Decrement

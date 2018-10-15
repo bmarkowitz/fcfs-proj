@@ -95,10 +95,4 @@ class Scheduler:
         for proc in self.completed:
             results_string += str(proc) + "     -    " + str(proc.resp_time) + "     -    " + str(proc.wait_time)+ "     -    " + str(proc.ta_time) + "\n"
         results_string += "CPU Utilization: {:.4f}".format((self.utilization/self.time) * 100)
-        return results_string
-
-
-    # def complete_process(self, proc):
-
-
-    
+        return results_string 

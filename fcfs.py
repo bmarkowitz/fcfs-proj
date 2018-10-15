@@ -73,9 +73,13 @@ while(True):
         scheduler.display()
         scheduler.context_switch = False
 
+    if scheduler.cpu:
+        scheduler.utilization += 1 # Increment CPU utilization 
+
     scheduler.advance_wait_time()
     scheduler.advance_time()
 
-print("Process     RT         WT           TT")
-for proc in scheduler.completed:
-    print(str(proc) + "     -    " + str(proc.resp_time) + "     -    " + str(proc.wait_time)+ "     -    " + str(proc.ta_time))
+print(scheduler.compute_avg("resp"))
+print(scheduler.compute_avg("wait"))
+print(scheduler.compute_avg("tt"))
+print(scheduler.display_results())

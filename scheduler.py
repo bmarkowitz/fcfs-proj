@@ -8,6 +8,7 @@ class Scheduler:
         self.io = []
         self.context_switch = False
         self.completed = []
+        self.utilization = 0
 
     def get_next_process(self):
         if self.ready_queue:
@@ -70,9 +71,32 @@ class Scheduler:
         for proc in self.ready_queue:
             proc.wait_time += 1
     
-
     def clear_cpu(self):
         self.cpu = []
+
+    def compute_avg(self, type):
+        total = 0
+        if type == "wait":
+            for proc in self.completed:
+                total += proc.wait_time
+            return("Average wait time: " + str(total/8))
+        elif type == "tt":
+            for proc in self.completed:
+                total += proc.ta_time
+            return("Average turnaround time: " + str(total/8))
+        else:
+            for proc in self.completed:
+                total += proc.resp_time
+            return("Average response time: " + str(total/8))
+
+    def display_results(self):
+        results_string = ""
+        results_string += "Process     RT         WT           TT\n-----------------------------------------\n"
+        for proc in self.completed:
+            results_string += str(proc) + "     -    " + str(proc.resp_time) + "     -    " + str(proc.wait_time)+ "     -    " + str(proc.ta_time) + "\n"
+        results_string += "CPU Utilization: {:.4f}".format((self.utilization/self.time) * 100)
+        return results_string
+
 
     # def complete_process(self, proc):
 

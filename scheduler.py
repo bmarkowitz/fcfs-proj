@@ -46,7 +46,7 @@ class Scheduler:
         try:
             print("Now Running: " + str(self.cpu[0]))
         except IndexError:
-            print("Now Running: IDLE")
+            print("Now Running: [IDLE]")
         print("--------------------------------------------")
         self.display_ready_queue()
         self.display_io_queue()

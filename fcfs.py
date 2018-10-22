@@ -46,7 +46,7 @@ while(True):
                current_proc.set_arrival_time(scheduler.time) 
                scheduler.load_io(current_proc)
                if next_proc:
-                   scheduler.clear_cpu
+                   scheduler.clear_cpu()
                    scheduler.load_cpu(next_proc)
                    if next_proc.resp_time == -1:
                         next_proc.resp_time = scheduler.time
